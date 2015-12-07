@@ -8,23 +8,39 @@ alias la='ls -la'
 
 # Shell
 bindkey '^R' history-incremental-pattern-search-backward
+# History
 export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=2000
 export SAVEHIST=3000
-export EDITOR=vim
-export BASE16_SHELL="$HOME/code/resources/base16-shell/base16-eighties.dark.sh"
-export POWERLINE_ROOT="$(brew --prefix)/lib/python2.7/site-packages/powerline"
-setopt hist_ignore_all_dups
-setopt autocd
-setopt extendedglob
-zstyle ':completion:*' menu select
-fpath=(/usr/local/share/zsh-completions $fpath)
-autoload -Uz compinit
-compinit
 
+setopt append_history # Don't clobber. Append
+setopt extended_history # Use timestamps
+setopt hist_expire_dups_first # When trimming, tackle dupes first
+setopt hist_ignore_dups # ignore duplication command history list
+setopt hist_ignore_space # Lines starting with a space are ignored
+setopt hist_verify
+setopt inc_append_history # Don't wait for the shell to exit before adding history
+setopt share_history # share command history data
+
+# Colours
+export BASE16_SHELL="$HOME/code/resources/base16-shell/base16-eighties.dark.sh"
 [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
 
-fpath=(/usr/local/share/zsh-completions $fpath)
+# Editor
+export EDITOR=vim
+
+# Powerline (tmux only)
+export POWERLINE_ROOT="$(brew --prefix)/lib/python2.7/site-packages/powerline"
+
+# Browse nicely
+setopt autocd
+setopt extendedglob
+
+# Turns on autocompletion
+fpath=(/usr/local/share/zsh-completions $fpath) # Where the completions?
+autoload -Uz compinit # Load the completion module
+compinit # Process completions
+zstyle ':completion:*' menu select # Style of completion
 
 # Prompt
 source "${HOME}/.zprompt"
