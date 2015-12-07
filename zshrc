@@ -36,7 +36,6 @@ fi
 
 # Me
 export PROJECT_HOME=$HOME/code
-export HOMEBREW_GITHUB_API_TOKEN='6bfc3ebfc8d5f47222db9e6edd941b2258fb0082'
 
 # Python
 export PYTHONSTARTUP=$HOME/.pystartup
