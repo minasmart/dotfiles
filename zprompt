@@ -1,41 +1,40 @@
 #!/usr/bin/env zsh
 
+function +vi-reset {
+  _vcs_info_left=''
+  _vcs_info_right=''
+  for k in "${(@k)_vcs_values}"; do
+    _vcs_values[$k]=''
+  done
+}
 function +vi-git-remote-status {
-  local ahead behind
   local ahead_symbol behind_symbol
-  local -a gitstatus
 
   ahead_symbol="⬆"
   behind_symbol="⬇"
 
   if [ $(git rev-list ${hook_com[branch]}@{upstream}..HEAD | wc -l) -gt 0 ]; then
-    gitstatus+=( "%F{15}⬆%f" )
+    _vcs_values[ahead]=$ahead_symbol
   fi
 
   if [ $(git rev-list HEAD..${hook_com[branch]}@{upstream} | wc -l) -gt 0 ]; then
-    gitstatus+=( "%F{11}⬇%f" )
+    _vcs_values[behind]=$behind_symbol
   fi
-
-  hook_com[misc]+=${gitstatus}
 }
 
 function +vi-git-untracked {
   if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]] && git status --porcelain | grep '??' &> /dev/null ; then
-    _vcs_info_untracked="%F{15}◼%f"
-  else
-    _vcs_info_untracked=''
+    _vcs_values[untracked]="◼"
   fi
 }
 
 function +vi-git-stashed {
   if [ $(git stash list | wc -l) -gt 0 ]; then
-    _vcs_info_stashed=" %B%F{cyan}✭%f%b"
-  else
-    _vcs_info_stashed=''
+    _vcs_values[stashed]="✭"
   fi
 }
 
-function prompt_pwd {
+function _build_prompt_pwd {
   local pwd="${PWD/#$HOME/~}"
 
   if [[ "$pwd" == (#m)[/~] ]]; then
@@ -46,30 +45,40 @@ function prompt_pwd {
   fi
 }
 
+function _build_prompt_vcs_info {
+  vcs_info
+
+  local messages
+
+  if [[ -n ${vcs_info_msg_0_} ]]; then
+    messages=("${(@s/,/)vcs_info_msg_0_}")
+
+    _vcs_info_left="${messages[1]}"
+
+    _vcs_values[unstaged]=${messages[2]}
+    _vcs_values[staged]=${messages[3]}
+    _vcs_values[misc]=${messages[4]}
+
+    [[ -n ${_vcs_values[misc]} ]] && _vcs_info_right+=" %F{magenta}${_vcs_values[staged]}%f"
+    [[ -n ${_vcs_values[untracked]} ]] && _vcs_info_right+=" %F{15}${_vcs_values[untracked]}%f"
+    [[ -n ${_vcs_values[unstaged]} ]] && _vcs_info_right+=" %F{red}${_vcs_values[unstaged]}%f"
+    [[ -n ${_vcs_values[staged]} ]] && _vcs_info_right+=" %F{green}${_vcs_values[staged]}%f"
+    [[ -n ${_vcs_values[stashed]} ]] && _vcs_info_right+=" %F{cyan}${_vcs_values[stashed]}%f"
+    [[ -n ${_vcs_values[ahead]} ]] && _vcs_info_right+=" %F{15}${_vcs_values[ahead]}%f"
+    [[ -n ${_vcs_values[behind]} ]] && _vcs_info_right+=" %F{11}${_vcs_values[behind]}%f"
+  fi
+}
+
 function precmd {
   setopt LOCAL_OPTIONS
   unsetopt XTRACE KSH_ARRAYS
 
-  # Format PWD
-  prompt_pwd
-  vcs_info
-
-  local messages
-  local rprompt_parts
-
-  if [[ -n ${vcs_info_msg_0_} ]]; then
-    messages=("${(@s/,/)vcs_info_msg_0_}")
-    rprompt_parts=("${(@s/ /)messages[2]}")
-
-    _vcs_info="${messages[1]}"
-    _vcs_info_right="$_vcs_info_untracked ${messages[2]}$_vcs_info_stashed"
-  else
-    _vcs_info=''
-    _vcs_info_right=''
-  fi
+  # Build prompt parts
+  _build_prompt_pwd
+  _build_prompt_vcs_info
 }
 
-function format_vcs_info {
+function set_vcs_info_formats {
   # Turn on vcs_info
   autoload -Uz vcs_info
   # Set one vcs message
@@ -83,14 +92,14 @@ function format_vcs_info {
   zstyle ':vcs_info:git*:*' check-for-changes true
 
   # Add some behaviour when the git message is set
-  zstyle ':vcs_info:git*+set-message:*' hooks git-remote-status git-untracked git-stashed
+  zstyle ':vcs_info:git*+set-message:*' hooks reset git-remote-status git-untracked git-stashed
 
   # Show dirty files with a fancy *
   zstyle ':vcs_info:*' unstagedstr "✱"
   # Show staged files with a fancy +
   zstyle ':vcs_info:*' stagedstr "✚"
 
-  # set formats
+  # vcs_info format string reference:
   # %b - branchname
   # %m - shows stash info
   # %u - unstagedstr (see below)
@@ -98,15 +107,14 @@ function format_vcs_info {
   # %a - action (e.g. rebase-i)
   # %R - repository path
   # %S - path in the repository
+
+  # Format the left part of the prompt, and dump the rest separated by ','.
+  # These are consumed in the method above where all the parts are staged
+  local scm_format="%F{08}%s%f"
   local branch_format="%F{blue}%b%f"
   local action_format="%F{135}%a%f"
-  local staged_format="%F{green}%c%f"
-  local misc_format="%m"
-  local unstaged_format="%F{red}%u%f"
-  local scm_format="%F{08}%s%f"
-  zstyle ':vcs_info:git*' formats "${scm_format}[$branch_format] ,$unstaged_format $staged_format $misc_format"
-  zstyle ':vcs_info:git*' actionformats "${scm_format}[$branch_format|$action_format] ,$unstaged_format $staged_format $misc_format"
-  #zstyle ':vcs_info:*:prompt:*' unstagedstr "◼"
+  zstyle ':vcs_info:git*' formats "${scm_format}[$branch_format] ,%u,%c,%m"
+  zstyle ':vcs_info:git*' actionformats "${scm_format}[$branch_format|$action_format] ,%u,%c,%m"
 
 }
 
@@ -114,14 +122,15 @@ function prompt_setup {
   setopt LOCAL_OPTIONS
   unsetopt XTRACE KSH_ARRAYS
 
-  format_vcs_info
+  set_vcs_info_formats
 
   PROMPT='%F{cyan}${_prompt_pwd}%f
-${_vcs_info}%(?.%F{green}${1:-∴}%f.%F{red}${1:-∴}%f) '
+${_vcs_info_left}%(?.%F{green}${1:-∴}%f.%F{red}${1:-∴}%f) '
   RPROMPT='${_vcs_info_right}'
   SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
 }
 
+typeset -A _vcs_values
 setopt prompt_subst
 setopt prompt_percent
 setopt prompt_cr
