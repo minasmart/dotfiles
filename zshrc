@@ -5,9 +5,14 @@ alias be='bundle exec'
 alias ls='ls -G'
 alias ll='ls -l'
 alias la='ls -la'
+alias gg='git grep'
 
 # Shell
+
+# Key bindings
 bindkey '^R' history-incremental-pattern-search-backward
+bindkey -e # use emacs line editing
+
 # History
 export HISTFILE="$HOME/.zsh_history"
 export HISTSIZE=2000
