@@ -98,7 +98,7 @@
 [core]
   autocrlf = false
   editor = vim
-	excludesfile = /Users/msmart/.gitignore
+  excludesfile = /Users/msmart/.gitignore
 [advice]
   statusHints = false
 [diff]
@@ -108,15 +108,15 @@
 [rerere]
   # Remember my merges
   # http://gitfu.wordpress.com/2008/04/20/git-rerere-rereremember-what-you-did-last-time/
-	enabled = 1
+  enabled = 1
 [user]
-	name = Mina Smart
-	email = mina.smart@thescore.com
+  name = Mina Smart
+  email = mina.smart@shopify.com
 [github]
-	user = minasmart
+  user = minasmart
 [credential]
-	helper = osxkeychain
+  helper = osxkeychain
 [filter "lfs"]
-	clean = git-lfs clean %f
-	smudge = git-lfs smudge %f
-	required = true
+  clean = git-lfs clean %f
+  smudge = git-lfs smudge %f
+  required = true
