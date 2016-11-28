@@ -6,6 +6,8 @@ alias ls='ls -G'
 alias ll='ls -l'
 alias la='ls -la'
 alias gg='git grep'
+alias npm-do='env PATH=$(npm bin):$PATH'
+alias eslint="npm-do eslint"
 
 # Shell
 
@@ -83,3 +85,10 @@ alias mp=mitmproxy
 
 # Highlight syntax
 source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+# Shopify specific environment set up.
+if [ -f /opt/dev/dev.sh ]; then
+  source /opt/dev/dev.sh
+fi
+
+export PATH="$HOME/.yarn/bin:$PATH"

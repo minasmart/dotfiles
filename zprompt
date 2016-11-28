@@ -1,23 +1,24 @@
 #!/usr/bin/env zsh
 
-function +vi-reset {
+function _vcs_info_reset {
   _vcs_info_left=''
   _vcs_info_right=''
   for k in "${(@k)_vcs_values}"; do
     _vcs_values[$k]=''
   done
 }
+
 function +vi-git-remote-status {
   local ahead_symbol behind_symbol
 
   ahead_symbol="⬆"
   behind_symbol="⬇"
 
-  if [ $(git rev-list ${hook_com[branch]}@{upstream}..HEAD | wc -l) -gt 0 ]; then
+  if [ $(git rev-list ${hook_com[branch]}@{upstream}..HEAD 2>/dev/null | wc -l) -gt 0 ]; then
     _vcs_values[ahead]=$ahead_symbol
   fi
 
-  if [ $(git rev-list HEAD..${hook_com[branch]}@{upstream} | wc -l) -gt 0 ]; then
+  if [ $(git rev-list HEAD..${hook_com[branch]}@{upstream} 2>/dev/null | wc -l) -gt 0 ]; then
     _vcs_values[behind]=$behind_symbol
   fi
 }
@@ -34,6 +35,12 @@ function +vi-git-stashed {
   fi
 }
 
+function +vi-git-deleted {
+  if [ $(git ls-files --deleted | wc -l) -gt 0 ]; then
+    _vcs_values[deleted]="✖"
+  fi
+}
+
 function _build_prompt_pwd {
   local pwd="${PWD/#$HOME/~}"
 
@@ -46,26 +53,31 @@ function _build_prompt_pwd {
 }
 
 function _build_prompt_vcs_info {
-  vcs_info
+  _vcs_info_reset
 
-  local messages
+  if [[ -z $PROMPT_IGNORE_GIT ]]; then
+    vcs_info
 
-  if [[ -n ${vcs_info_msg_0_} ]]; then
-    messages=("${(@s/,/)vcs_info_msg_0_}")
+    local messages
 
-    _vcs_info_left="${messages[1]}"
+    if [[ -n ${vcs_info_msg_0_} ]]; then
+      messages=("${(@s/,/)vcs_info_msg_0_}")
 
-    _vcs_values[unstaged]=${messages[2]}
-    _vcs_values[staged]=${messages[3]}
-    _vcs_values[misc]=${messages[4]}
+      _vcs_info_left="${messages[1]}"
 
-    [[ -n ${_vcs_values[misc]} ]] && _vcs_info_right+=" %F{magenta}${_vcs_values[staged]}%f"
-    [[ -n ${_vcs_values[untracked]} ]] && _vcs_info_right+=" %F{15}${_vcs_values[untracked]}%f"
-    [[ -n ${_vcs_values[unstaged]} ]] && _vcs_info_right+=" %F{red}${_vcs_values[unstaged]}%f"
-    [[ -n ${_vcs_values[staged]} ]] && _vcs_info_right+=" %F{green}${_vcs_values[staged]}%f"
-    [[ -n ${_vcs_values[stashed]} ]] && _vcs_info_right+=" %F{cyan}${_vcs_values[stashed]}%f"
-    [[ -n ${_vcs_values[ahead]} ]] && _vcs_info_right+=" %F{15}${_vcs_values[ahead]}%f"
-    [[ -n ${_vcs_values[behind]} ]] && _vcs_info_right+=" %F{11}${_vcs_values[behind]}%f"
+      _vcs_values[unstaged]=${messages[2]}
+      _vcs_values[staged]=${messages[3]}
+      _vcs_values[misc]=${messages[4]}
+
+      [[ -n ${_vcs_values[misc]} ]] && _vcs_info_right+=" %F{magenta}${_vcs_values[staged]}%f"
+      [[ -n ${_vcs_values[untracked]} ]] && _vcs_info_right+=" %F{15}${_vcs_values[untracked]}%f"
+      [[ -n ${_vcs_values[unstaged]} ]] && _vcs_info_right+=" %F{blue}${_vcs_values[unstaged]}%f"
+      [[ -n ${_vcs_values[deleted]} ]] && _vcs_info_right+=" %F{09}%B${_vcs_values[deleted]}%b%f"
+      [[ -n ${_vcs_values[staged]} ]] && _vcs_info_right+=" %F{green}${_vcs_values[staged]}%f"
+      [[ -n ${_vcs_values[stashed]} ]] && _vcs_info_right+=" %F{cyan}${_vcs_values[stashed]}%f"
+      [[ -n ${_vcs_values[ahead]} ]] && _vcs_info_right+=" %F{15}${_vcs_values[ahead]}%f"
+      [[ -n ${_vcs_values[behind]} ]] && _vcs_info_right+=" %F{11}${_vcs_values[behind]}%f"
+    fi
   fi
 }
 
@@ -92,7 +104,7 @@ function set_vcs_info_formats {
   zstyle ':vcs_info:git*:*' check-for-changes true
 
   # Add some behaviour when the git message is set
-  zstyle ':vcs_info:git*+set-message:*' hooks reset git-remote-status git-untracked git-stashed
+  zstyle ':vcs_info:git*+set-message:*' hooks git-remote-status git-untracked git-stashed git-deleted
 
   # Show dirty files with a fancy *
   zstyle ':vcs_info:*' unstagedstr "✱"
@@ -128,6 +140,14 @@ function prompt_setup {
 ${_vcs_info_left}%(?.%F{green}${1:-∴}%f.%F{red}${1:-∴}%f) '
   RPROMPT='${_vcs_info_right}'
   SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
+}
+
+function disable_git_prompt {
+  export PROMPT_IGNORE_GIT=1
+}
+
+function enable_git_prompt {
+  export PROMPT_IGNORE_GIT=
 }
 
 typeset -A _vcs_values

@@ -37,7 +37,7 @@ Plugin 'pld-linux/vim-syntax-vcl'
 Plugin 'file:///Users/msmart/Projects/personal/rust.vim/'
 Plugin 'scrooloose/syntastic'
 Plugin 'othree/yajs.vim'
-Plugin 'mxw/vim-jsx'
+"Plugin 'mxw/vim-jsx'
 Plugin 'elixir-lang/vim-elixir'
 " clojure
 Plugin 'tpope/vim-leiningen'
@@ -158,8 +158,9 @@ au BufNewFile,BufRead *.es6 set filetype=javascript
 " Easier than typing SyntasticCheck
 nmap <silent> <leader>c :SyntasticCheck<CR>
 let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_javascript_checkers = [ 'eslint', 'jshint' ]
-autocmd FileType javascript let b:syntastic_checkers = findfile('.eslintrc', '.;') != '' ? ['eslint'] : ['standard']
+let g:syntastic_javascript_checkers = [ 'eslint' ]
+autocmd FileType javascript let b:syntastic_javascript_eslint_exec = substitute(system('npm bin'), '\n\+$', '', '') . "/eslint"
+autocmd FileType javascript let b:syntastic_checkers = ['eslint']
 
 " Better split navigation
 nnoremap <leader>n <C-W><C-J>

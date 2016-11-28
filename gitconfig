@@ -98,7 +98,7 @@
 [core]
   autocrlf = false
   editor = vim
-  excludesfile = /Users/msmart/.gitignore
+  excludesfile = /Users/minasmart/.gitignore
 [advice]
   statusHints = false
 [diff]
@@ -112,6 +112,7 @@
 [user]
   name = Mina Smart
   email = mina.smart@shopify.com
+  signingkey = Mina Smart <m.d.smart@gmail.com>
 [github]
   user = minasmart
 [credential]
@@ -120,3 +121,5 @@
   clean = git-lfs clean %f
   smudge = git-lfs smudge %f
   required = true
+[commit]
+	gpgsign = true
