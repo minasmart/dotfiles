@@ -9,6 +9,15 @@ alias gg='git grep'
 alias npm-do='env PATH=$(npm bin):$PATH'
 alias eslint="npm-do eslint"
 
+unfuck () {
+  stty sane
+  printf '\033k%s\033\\\033]2;%s\007' "`basename "$SHELL"`" "`uname -n`"
+  tput reset
+  tmux refresh
+}
+
+alias did='vim +"normal Go" +"r!date" ~/did.txt'
+
 # Shell
 
 # Key bindings
@@ -30,14 +39,15 @@ setopt inc_append_history # Don't wait for the shell to exit before adding histo
 setopt share_history # share command history data
 
 # Colours
-export BASE16_SHELL="$HOME/code/resources/base16-shell/base16-eighties.dark.sh"
-[[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+# export BASE16_SHELL="$HOME/code/resources/base16-shell/base16-eighties.dark.sh"
+# [[ -s $BASE16_SHELL ]] && source $BASE16_SHELL
+source "$HOME/.dotfiles/colors.sh"
 
 # Editor
 export EDITOR=vim
 
 # Powerline (tmux only)
-export POWERLINE_ROOT="$(brew --prefix)/lib/python2.7/site-packages/powerline"
+export POWERLINE_ROOT="$(dirname $(pyenv which powerline))/../lib/python$(pyenv version | cut -d'.' -f1,2)/site-packages/powerline"
 
 # Browse nicely
 setopt autocd
@@ -45,12 +55,12 @@ setopt extendedglob
 
 # Turns on autocompletion
 fpath=(/usr/local/share/zsh-completions $fpath) # Where the completions?
+
+unset _etc
+unset _path
 autoload -Uz compinit # Load the completion module
 compinit # Process completions
 zstyle ':completion:*' menu select # Style of completion
-
-# Prompt
-source "${HOME}/.zprompt"
 
 # Secrets
 if [ -e "${HOME}/.secrets" ]; then
@@ -66,10 +76,10 @@ export WORKON_HOME=$HOME/.virtualenvs
 # source /usr/local/share/python/virtualenvwrapper_lazy.sh
 
 # Ruby
-export RBENV_ROOT=$(brew --prefix)/var/rbenv
-if which rbenv > /dev/null; then
-  eval "$(rbenv init -)"
-fi
+# export RBENV_ROOT=$(brew --prefix)/var/rbenv
+# if which rbenv > /dev/null; then
+#  eval "$(rbenv init -)"
+# fi
 export EXECJS_RUNTIME=Node
 
 # Node
@@ -90,5 +100,17 @@ source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.z
 if [ -f /opt/dev/dev.sh ]; then
   source /opt/dev/dev.sh
 fi
-
 export PATH="$HOME/.yarn/bin:$PATH"
+export DISABLE_SPRING=1
+source $HOME/.cargo/env
+export PATH=$PATH:$(go env GOPATH)/bin
+export GOPATH=$(go env GOPATH)
+# use brew curl
+
+source ~/.zshenv
+
+# FZF
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Prompt
+source "${HOME}/.zprompt"

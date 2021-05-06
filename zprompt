@@ -93,12 +93,18 @@ function precmd {
 function set_vcs_info_formats {
   # Turn on vcs_info
   autoload -Uz vcs_info
+  # Set which git to use (uncomment one of these)
+  # Nix Variant
+  # zstyle ':vcs_info:git:*:-all-' command /nix/var/nix/gcroots/dev-profiles/user-extra-profile/bin/git
+  # brew variant
+  # zstyle ':vcs_info:git:*:-all-' command /usr/local/bin/git
+  # Load git completions
+  # Nix Variant
+  zstyle ':completion:*:*:git:*' script /nix/var/nix/gcroots/dev-profiles/bootstrap-profile/share/git/contrib/completion/git-completion.zsh
   # Set one vcs message
   zstyle ':vcs_info:-init-:default:-all-' max-exports 1
   # I only really care about git
   zstyle ':vcs_info:*' enable git
-  # Use brew git
-  zstyle ':vcs_info:git:*:-all-' command /usr/local/bin/git
   # Update git status
   zstyle ':vcs_info:git*:*' get-revision true
   zstyle ':vcs_info:git*:*' check-for-changes true
