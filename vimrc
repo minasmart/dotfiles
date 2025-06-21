@@ -4,53 +4,49 @@
 
 set shell=/bin/zsh
 set nocompatible
+filetype off
 set encoding=utf-8
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#rc()
+" set rtp+=~/.vim/bundle/Vundle.vim
+call plug#begin()
 
-" Plugin
-Plugin 'gmarik/vundle'
 " good ones
-Plugin 'chriskempson/base16-vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-git'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tpope/vim-sleuth'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'mattn/webapi-vim'
-Plugin 'mattn/gist-vim'
-Plugin 'rizzatti/dash.vim'
+Plug 'chriskempson/base16-vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-git'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-sleuth'
+Plug 'airblade/vim-gitgutter'
+Plug 'mattn/webapi-vim'
+Plug 'mattn/gist-vim'
+Plug 'rizzatti/dash.vim'
 " syntax
-Plugin 'tpope/vim-ragtag'
-Plugin 'tpope/vim-markdown'
-Plugin 'tpope/vim-bundler'
-Plugin 'tpope/vim-rake'
-Plugin 'tpope/vim-rails'
-Plugin 'mustache/vim-mustache-handlebars'
-Plugin 'wavded/vim-stylus'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'lukerandall/haskellmode-vim'
-Plugin 'guns/vim-clojure-static'
-Plugin 'pld-linux/vim-syntax-vcl'
-Plugin 'file:///Users/msmart/Projects/personal/rust.vim/'
-Plugin 'scrooloose/syntastic'
-Plugin 'othree/yajs.vim'
-"Plugin 'mxw/vim-jsx'
-Plugin 'elixir-lang/vim-elixir'
+Plug 'tpope/vim-ragtag'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-bundler'
+Plug 'tpope/vim-rake'
+Plug 'tpope/vim-rails'
+Plug 'mustache/vim-mustache-handlebars'
+Plug 'wavded/vim-stylus'
+Plug 'kchmck/vim-coffee-script'
+Plug 'lukerandall/haskellmode-vim'
+Plug 'guns/vim-clojure-static'
+Plug 'pld-linux/vim-syntax-vcl'
+Plug 'scrooloose/syntastic'
+Plug 'othree/yajs.vim'
 " clojure
-Plugin 'tpope/vim-leiningen'
-Plugin 'tpope/vim-fireplace'
-Plugin 'tpope/vim-classpath'
-Plugin 'tpope/vim-dispatch'
-Plugin 'kien/rainbow_parentheses.vim'
+Plug 'tpope/vim-leiningen'
+Plug 'tpope/vim-fireplace'
+Plug 'tpope/vim-classpath'
+Plug 'tpope/vim-dispatch'
+Plug 'kien/rainbow_parentheses.vim'
+
+call plug#end()
 
 " Basics
-syntax enable
 set showcmd
 set showmode
-filetype plugin indent on
 set nu " Line numbers on
 set showmatch " Show matching brackets/parenthesis
 set spell
@@ -127,7 +123,7 @@ match OverLength /\%121v.\+/
 " Statusline
 set laststatus=2
 set statusline=[%{getcwd()}/%F]          " Current dir
-set statusline+=%{fugitive#statusline()} " Git Hotness
+set statusline+=%{FugitiveStatusline()} " Git Hotness
 set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
 
 " Autocomplete
@@ -135,10 +131,10 @@ set wildmenu                    " Show list instead of just completing
 set wildmode=list:longest,full  " Command <Tab> completion, list matches, then longest common part, then all.
 
 " mac home/end fixes
-map [F $
-imap [F $
-map [H g0
-imap [H g0
+map [F $
+imap [F $
+map [H g0
+imap [H g0
 
 " Rainbow parens
 au VimEnter * RainbowParenthesesToggle
@@ -161,6 +157,7 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_javascript_checkers = [ 'eslint' ]
 autocmd FileType javascript let b:syntastic_javascript_eslint_exec = substitute(system('npm bin'), '\n\+$', '', '') . "/eslint"
 autocmd FileType javascript let b:syntastic_checkers = ['eslint']
+let g:syntastic_html_tidy_exec = '/opt/homebrew/bin/tidy'
 
 " Better split navigation
 nnoremap <leader>n <C-W><C-J>
@@ -171,3 +168,4 @@ nnoremap <leader>h <C-W><C-H>h
 " Quick tab navigation
 nmap <silent> <leader>c :tabprev<CR>
 nmap <silent> <leader>r :tabnext<CR>
+ 

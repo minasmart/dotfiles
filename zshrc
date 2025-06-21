@@ -1,4 +1,7 @@
-# ~/.zshrc
+#!/usr/bin/env zsh
+
+# photo backup
+alias crudup="/usr/bin/rsync -azP /Volumes/Crudbump/photography /Volumes/mina\ \-\ backup"
 
 # Convenience
 alias be='bundle exec'
@@ -47,7 +50,7 @@ source "$HOME/.dotfiles/colors.sh"
 export EDITOR=vim
 
 # Powerline (tmux only)
-export POWERLINE_ROOT="$(dirname $(pyenv which powerline))/../lib/python$(pyenv version | cut -d'.' -f1,2)/site-packages/powerline"
+# export POWERLINE_ROOT="$(dirname $(pyenv which powerline))/../lib/python$(pyenv version | cut -d'.' -f1,2)/site-packages/powerline"
 
 # Browse nicely
 setopt autocd
@@ -71,15 +74,15 @@ fi
 export PROJECT_HOME=$HOME/code
 
 # Python
-export PYTHONSTARTUP=$HOME/.pystartup
-export WORKON_HOME=$HOME/.virtualenvs
-# source /usr/local/share/python/virtualenvwrapper_lazy.sh
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
 
 # Ruby
-# export RBENV_ROOT=$(brew --prefix)/var/rbenv
-# if which rbenv > /dev/null; then
-#  eval "$(rbenv init -)"
-# fi
+export RBENV_ROOT=$(brew --prefix)/var/rbenv
+if which rbenv > /dev/null; then
+  eval "$(rbenv init -)"
+fi
 export EXECJS_RUNTIME=Node
 
 # Node
@@ -102,12 +105,14 @@ if [ -f /opt/dev/dev.sh ]; then
 fi
 export PATH="$HOME/.yarn/bin:$PATH"
 export DISABLE_SPRING=1
-source $HOME/.cargo/env
-export PATH=$PATH:$(go env GOPATH)/bin
-export GOPATH=$(go env GOPATH)
+# source $HOME/.cargo/env
+# export PATH=$PATH:$(go env GOPATH)/bin
+# export GOPATH=$(go env GOPATH)
 # use brew curl
+export PATH="/opt/homebrew/opt/findutils/libexec/gnubin:$PATH"
 
-source ~/.zshenv
+# source ~/.zshenv
+
 
 # FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

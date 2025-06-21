@@ -163,3 +163,4 @@ setopt prompt_cr
 autoload -U add-zsh-hook
 
 prompt_setup "$@"
+
