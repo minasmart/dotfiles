@@ -1,5 +1,5 @@
 .DEFAULT_GOAL := shorthelp
-.PHONY: shorthelp help install/directories install/link install/xcode install/homebrew install/tools install/ohmyzsh plugins
+.PHONY: shorthelp help install/directories install/link install/xcode install/homebrew install/tools plugins
 .PHONY: update/tools update/omz update/tools
 
 install: ## Clean install of all the tools that we need
@@ -9,8 +9,6 @@ install: ## Clean install of all the tools that we need
 	@$(MAKE) install/tools
 	@$(MAKE) install/gpg
 	@$(MAKE) install/plugins
-
-update: | plugins update/omz update/tools ## Update tools and plugins
 
 clean: ## Clean up the linked directories in the home directory.
 	@rm -rf ~/.config/git ~/.config/tmux ~/.zshrc ~/.oh-my-zsh
@@ -57,6 +55,12 @@ update/omz: ## Update zsh plugins
 
 install/plugins: plugins/tmux plugins/omz ## install all plugins
 update/plugins: install/plugins ## update all plugins
+
+
+update: | plugins update/omz update/tools ## Update tools and plugins
+
+
+
 
 plugins/tmux: ## Install tmux plugins because I cant figure out tpm
 	@echo "==== installing tmux plugins"
