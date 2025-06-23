@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := shorthelp
 .PHONY: shorthelp help
 .PHONY: install/directories install/link install/tools install/xcode install/homebrew install/vim-plug
-.PHONY: setup/zsh setup/vim setup/gpg
+.PHONY: setup/zsh setup/vim setup/gpg setup/shell-colours
 .PHONY: update/tools update/vim-plugins update/all
 
 shorthelp:
@@ -17,12 +17,13 @@ install: ## Clean install of all the tools that we need
 	@$(MAKE) install/directories
 	@$(MAKE) install/link
 	@$(MAKE) install/tools
+	@$(MAKE) setup/shell-colours
 	@$(MAKE) setup/zsh
 	@$(MAKE) setup/vim
 	@$(MAKE) setup/gpg
 
 clean: ## Clean up the linked directories in the home directory.
-	@rm -rf ~/.config/git ~/.config/tmux ~/.zshrc ~/.vimrc ~/.gnupg/gpg-agent.conf
+	@rm -rf ~/.config/{git,tmux,zellij} ~/.zshrc ~/.vimrc ~/.gnupg/gpg-agent.conf
 
 install/directories: ## Create directories that I expect to be there
 	@echo "==== creating default directories"
@@ -65,6 +66,15 @@ setup/zsh: ## add brew zsh to /etc/shells and set shell to brew zsh
 	@echo "==== adding Brew zsh to /etc/shells. You will be prompted for a password."
 	echo /opt/homebrew/bin/zsh | sudo tee -a /etc/shells
 	chsh -s /opt/homebrew/bin/zsh ${USER}
+
+setup/shell-colours: ## grab Chris Kempson's colour set and store it in ./config
+	@echo "====  checking if ~/.config/base16-shell exists"
+	@if [ ! -d ~/.config/base16-shell ]; then \
+		echo "~/.config/base16-shell is absent. Fetching..."; \
+		git clone git@github.com:chriskempson/base16-shell.git ~/.config/base16-shell; \
+	else \
+		echo "~/.config/base16-shell already exists. Moving on."; \
+	fi
 
 setup/vim: ## install vim plugins
 	vim +PlugInstall +qall

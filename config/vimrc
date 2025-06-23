@@ -60,7 +60,7 @@ set pastetoggle=<leader>p
 set t_Co=256
 let base16colorspace=256
 set background=dark
-colorscheme base16-eighties
+colorscheme base16-unikitty-dark
 
 " This fixes inlined html
 command Xmlbreak %s/></>\r</g
