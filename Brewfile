@@ -16,6 +16,8 @@ brew "tree"
 brew "watch"
 brew "zsh"
 brew "zsh-syntax-highlighting"
+brew "gnupg"
+brew "pinentry-mac"
 
 # Python
 brew "uv"

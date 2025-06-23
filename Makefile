@@ -22,11 +22,11 @@ install: ## Clean install of all the tools that we need
 	@$(MAKE) setup/gpg
 
 clean: ## Clean up the linked directories in the home directory.
-	@rm -rf ~/.config/git ~/.config/tmux ~/.zshrc ~/.vimrc
+	@rm -rf ~/.config/git ~/.config/tmux ~/.zshrc ~/.vimrc ~/.gnupg/gpg-agent.conf
 
 install/directories: ## Create directories that I expect to be there
 	@echo "==== creating default directories"
-	mkdir -p ~/.config ~/.vim/{backup,undo,swap}
+	mkdir -p ~/.config ~/.vim/{backup,undo,swap} ~/.gnupg
 
 install/link: ## Link saved dotfiles to to home directory
 	@echo "==== linking config files"
@@ -38,6 +38,7 @@ install/link: ## Link saved dotfiles to to home directory
 	ln -sf ~/.dotfiles/config/zshenv ~/.zshenv
 	ln -sf ~/.dotfiles/config/zprompt ~/.zprompt
 	ln -sf ~/.dotfiles/config/ssh/config ~/.ssh/config
+	ln -sf ~/.dotfiles/config/gnupg/gpg-agent.conf ~/.gnupg/gpg-agent.conf
 	ln -sf ~/.dotfiles/Brewfile ~/.Brewfile
 
 install/tools: install/xcode install/homebrew install/vim-plug
@@ -68,6 +69,10 @@ setup/vim: ## install vim plugins
 	vim +PlugInstall +qall
 
 setup/gpg:
+	chown -R ${USER} ~/.gnupg/
+	chmod 600 ~/.gnupg/*
+	chmod 700 ~/.gnupg
+	gpg-connect-agent reloadagent /bye
 	gpg --default-new-key-algo rsa4096 --gen-key
 	gpg --armor --export $(gpg --list-keys --with-colons --with-fingerprint | awk -F: '/^fpr:/ { print $10 }' | tail -n 1) | pbcopy
 	read -p "New gpg key is in clipboard add it to github and press enter to continue ..."
