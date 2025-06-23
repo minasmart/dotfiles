@@ -18,6 +18,7 @@ brew "zsh"
 brew "zsh-syntax-highlighting"
 brew "gnupg"
 brew "pinentry-mac"
+brew "zellij"
 
 # Python
 brew "uv"

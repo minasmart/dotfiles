@@ -32,6 +32,7 @@ install/link: ## Link saved dotfiles to to home directory
 	@echo "==== linking config files"
 	ln -s ~/.dotfiles/config/git ~/.config/git
 	ln -s ~/.dotfiles/config/tmux ~/.config/tmux
+	ln -s ~/.dotfiles/config/zellij ~/.config/zellij
 	ln -s ~/.dotfiles/config/vimrc ~/.vimrc
 	ln -sf ~/.dotfiles/config/zshrc ~/.zshrc
 	ln -sf ~/.dotfiles/config/zprofile ~/.zprofile
