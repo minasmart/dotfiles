@@ -50,7 +50,7 @@ install/xcode: ## ensure xcode doesnt get in our way
 install/homebrew: ## install my package manager
 	@echo "==== installing homebrew"
 	@echo "==== energizing sudo"
-	@sudo echo
+	@sudo true
 	NONINTERACTIVE=1 curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh | bash
 	@echo "==== installing brew bundle"
 	/opt/homebrew/bin/brew shellenv | eval
