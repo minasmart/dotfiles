@@ -2,12 +2,11 @@
 "   This is the personal .vimrc of Mina Smart
 "
 
-set shell=/bin/zsh
+set shell=/opt/homebrew/bin/zsh
 set nocompatible
 filetype off
 set encoding=utf-8
 
-" set rtp+=~/.vim/bundle/Vundle.vim
 call plug#begin()
 
 " good ones
@@ -101,14 +100,14 @@ set ignorecase                  " Case insensitive search
 set smartcase                   " Case sensitive when uc present
 
 " Undo
-set undodir=$HOME/.vimundo
+set undodir=$HOME/.vim/undo
 set undofile
 set undolevels=1000
 set undoreload=10000
 
 " Backup
-set backupdir=~/.vimbackup
-set directory=~/.vimswap.,~/tmp,/var/tmp,/tmp
+set backupdir=~/.vim/backup
+set directory=~/.vim/swap.,~/tmp,/var/tmp,/tmp
 
 " Visual editing
 set cursorline

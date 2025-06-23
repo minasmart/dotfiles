@@ -49,9 +49,6 @@ source "$HOME/.dotfiles/colors.sh"
 # Editor
 export EDITOR=vim
 
-# Powerline (tmux only)
-# export POWERLINE_ROOT="$(dirname $(pyenv which powerline))/../lib/python$(pyenv version | cut -d'.' -f1,2)/site-packages/powerline"
-
 # Browse nicely
 setopt autocd
 setopt extendedglob
@@ -72,11 +69,6 @@ fi
 
 # Me
 export PROJECT_HOME=$HOME/code
-
-# Python
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
 
 # Ruby
 export RBENV_ROOT=$(brew --prefix)/var/rbenv

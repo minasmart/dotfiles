@@ -28,7 +28,7 @@
 [core]
   autocrlf = false
   editor = vim
-  excludesfile = /Users/minasmart/.gitignore
+  excludesfile = /Users/minasmart/.config/git/exclude
 [advice]
   statusHints = false
 [diff]
