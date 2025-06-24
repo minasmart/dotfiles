@@ -19,6 +19,7 @@ brew "zsh-syntax-highlighting"
 brew "gnupg"
 brew "pinentry-mac"
 brew "zellij"
+cask "font-mononoki-nerd-font"
 
 # Python
 brew "uv"
