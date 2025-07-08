@@ -142,7 +142,7 @@ au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
 " Wrap markdown
-au BufRead,BufNewFile *.md setlocal textwidth=80
+autocmd Filetype markdown setlocal textwidth=80
 
 " Haskell settings
 let g:haddock_browser = "open"
