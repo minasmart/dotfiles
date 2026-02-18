@@ -2,7 +2,7 @@
 .PHONY: shorthelp help
 .PHONY: install/directories install/link install/tools install/xcode install/homebrew install/vim-plug
 .PHONY: setup/zsh setup/vim setup/gpg setup/shell-colours
-.PHONY: update/tools update/vim-plugins update/all
+.PHONY: update/brew-apps update/vim-plugins update/all
 
 shorthelp:
 	@grep -E '^[a-zA-Z_0-9-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -88,7 +88,7 @@ setup/gpg:
 	gpg --armor --export $(gpg --list-keys --with-colons --with-fingerprint | awk -F: '/^fpr:/ { print $10 }' | tail -n 1) | pbcopy
 	read -p "New gpg key is in clipboard add it to github and press enter to continue ..."
 
-update/tools: ## Update the tools I use every day
+update/brew-apps: ## Update the tools I use every day
 	brew bundle --global
 
 update/vim-plugins: ## Update the tools I use every day
@@ -96,4 +96,4 @@ update/vim-plugins: ## Update the tools I use every day
 
 update/all: install/plugins ## update all plugins
 
-update: | update/tools update/vim-plugin ## Update tools and plugins
+update: | update/brew-apps update/vim-plugin ## Update tools and plugins
