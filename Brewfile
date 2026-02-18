@@ -28,6 +28,7 @@ brew "zsh-syntax-highlighting"
 brew "gnupg"
 brew "pinentry-mac"
 brew "zellij"
+brew "cppcheck"
 cask "font-mononoki-nerd-font"
 
 # Python
