@@ -158,6 +158,12 @@ autocmd FileType javascript let b:syntastic_javascript_eslint_exec = substitute(
 autocmd FileType javascript let b:syntastic_checkers = ['eslint']
 let g:syntastic_html_tidy_exec = '/opt/homebrew/bin/tidy'
 
+" Associate .ino files with C++
+au BufNewFile,BufRead *.ino set filetype=cpp
+
+" Enable clang_tidy for C++ files
+let g:syntastic_cpp_checkers = ['cppcheck']
+
 " Better split navigation
 nnoremap <leader>n <C-W><C-J>
 nnoremap <leader>t <C-W><C-K>
