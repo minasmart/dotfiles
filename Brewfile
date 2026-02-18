@@ -1,7 +1,16 @@
 brew "mas"
 
+# podman
+brew "podman"
+brew "podman-compose"
+cask "podman-desktop"
+
+# passwords
+cask "proton-pass"
+
 # iTerm
 cask "iterm2"
+cask "calibre"
 
 # CLI
 brew "cli53"
